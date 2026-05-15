@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoteFlow — Secure Elections Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f3ee;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --teal: #1a6b6b;
+    --teal-light: #2a9d8f;
+    --accent: #e63946;
+    --muted: #6b6b7a;
+    --card-bg: #ffffff;
+    --border: rgba(10,10,15,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(245,243,238,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .logo span { color: var(--teal); font-style: italic; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-btn {
+    background: var(--ink); color: var(--paper);
+    border: none; padding: 0.6rem 1.4rem;
+    border-radius: 100px; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; font-size: 0.875rem; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-btn:hover { background: var(--teal); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    position: relative; overflow: hidden;
+    padding: 8rem 3rem 5rem;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(26,107,107,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 80%, rgba(201,168,76,0.1) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 60% 30%, rgba(230,57,70,0.05) 0%, transparent 50%);
+  }
+
+  /* Decorative circles */
+  .deco-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(26,107,107,0.15);
+    animation: ringPulse 8s ease-in-out infinite;
+  }
+  .deco-ring:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -100px; animation-delay: 0s; }
+  .deco-ring:nth-child(2) { width: 400px; height: 400px; top: -50px; right: 50px; animation-delay: 2s; border-color: rgba(201,168,76,0.15); }
+  .deco-ring:nth-child(3) { width: 200px; height: 200px; top: 100px; right: 200px; animation-delay: 4s; border-color: rgba(230,57,70,0.1); }
+
+  @keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.6; }
+  }
+
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 900px; text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(26,107,107,0.08);
+    border: 1px solid rgba(26,107,107,0.2);
+    padding: 0.4rem 1rem; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 500; color: var(--teal);
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before { content: '●'; font-size: 0.5rem; color: var(--teal-light); animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--teal);
+    font-weight: 300;
+  }
+  .hero-title .gold { color: var(--gold); }
+
+  .hero-sub {
+    font-size: 1.15rem; color: var(--muted);
+    max-width: 520px; margin: 0 auto 3rem;
+    line-height: 1.65; font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: white; border: none;
+    padding: 0.9rem 2.2rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 0.95rem; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 20px rgba(26,107,107,0.3);
+  }
+  .btn-primary:hover { background: #155a5a; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(26,107,107,0.4); }
+  .btn-primary .arrow { transition: transform 0.2s; }
+  .btn-primary:hover .arrow { transform: translateX(4px); }
+
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid var(--border);
+    padding: 0.9rem 2.2rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500; font-size: 0.95rem; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--ink); background: rgba(10,10,15,0.04); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; justify-content: center;
+    margin-top: 5rem; padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem; font-weight: 900; color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); font-weight: 400; margin-top: 0.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-section {
+    background: var(--ink); padding: 1rem 0;
+    overflow: hidden; white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-flex; gap: 3rem;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  .marquee-item {
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem; font-style: italic; font-weight: 300;
+    color: rgba(245,243,238,0.5); letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .marquee-dot { color: var(--gold); margin: 0 1rem; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── ELECTIONS SECTION ── */
+  .section {
+    padding: 6rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .section-title em { font-style: italic; font-weight: 300; color: var(--muted); }
+  .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 480px; line-height: 1.6; }
+
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
+
+  /* Filter tabs */
+  .filter-tabs { display: flex; gap: 0.5rem; }
+  .tab {
+    padding: 0.5rem 1.2rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: transparent; color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tab:hover:not(.active) { border-color: var(--ink); color: var(--ink); }
+
+  /* Election cards */
+  .elections-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+
+  .election-card {
+    background: white; border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden; transition: all 0.3s;
+    position: relative;
+    animation: fadeUp 0.5s ease both;
+  }
+  .election-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(10,10,15,0.1); border-color: rgba(26,107,107,0.2); }
+
+  .card-color-bar { height: 4px; }
+  .bar-teal { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+  .bar-gold { background: linear-gradient(90deg, var(--gold), #f4d06f); }
+  .bar-red { background: linear-gradient(90deg, var(--accent), #ff6b6b); }
+
+  .card-body { padding: 1.5rem; }
+
+  .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .card-category {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.3rem 0.8rem;
+    border-radius: 100px; background: rgba(26,107,107,0.08); color: var(--teal);
+  }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.7rem; font-weight: 600;
+    padding: 0.3rem 0.8rem; border-radius: 100px;
+  }
+  .status-live { background: rgba(230,57,70,0.08); color: var(--accent); }
+  .status-upcoming { background: rgba(201,168,76,0.1); color: #a07c2a; }
+  .status-completed { background: rgba(107,107,122,0.08); color: var(--muted); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .status-live .status-dot { animation: blink 1s infinite; }
+
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem; font-weight: 700; line-height: 1.25;
+    letter-spacing: -0.01em; margin-bottom: 0.5rem;
+  }
+  .card-org { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
+
+  .card-progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .progress-bar { height: 6px; background: rgba(10,10,15,0.06); border-radius: 100px; overflow: hidden; margin-bottom: 1.2rem; }
+  .progress-fill { height: 100%; border-radius: 100px; transition: width 1s ease; }
+  .fill-teal { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+  .fill-gold { background: linear-gradient(90deg, var(--gold), #f4d06f); }
+
+  .card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .voter-count { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+  .voter-avatars { display: flex; }
+  .voter-avatars span {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border: 2px solid white; margin-right: -6px;
+    font-size: 0.5rem; display: grid; place-items: center; color: white; font-weight: 700;
+  }
+  .voter-avatars span:nth-child(2) { background: linear-gradient(135deg, var(--gold), #f4d06f); }
+  .voter-avatars span:nth-child(3) { background: linear-gradient(135deg, #e63946, #ff6b6b); }
+
+  .card-action-btn {
+    padding: 0.55rem 1.2rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    border: none; transition: all 0.2s;
+  }
+  .btn-vote { background: var(--teal); color: white; box-shadow: 0 4px 15px rgba(26,107,107,0.25); }
+  .btn-vote:hover { background: #155a5a; transform: translateY(-1px); }
+  .btn-register { background: rgba(201,168,76,0.12); color: #8a6520; border: 1px solid rgba(201,168,76,0.3); }
+  .btn-register:hover { background: rgba(201,168,76,0.2); }
+  .btn-results { background: rgba(107,107,122,0.08); color: var(--muted); }
+  .btn-results:hover { background: rgba(107,107,122,0.15); color: var(--ink); }
+
+  .countdown { font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 600; color: var(--accent); letter-spacing: -0.01em; }
+  .countdown-label { font-size: 0.7rem; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+
+  /* ── FEATURES ── */
+  .features-section { background: var(--ink); padding: 6rem 3rem; }
+  .features-inner { max-width: 1200px; margin: 0 auto; }
+  .features-section .section-label { color: var(--gold-light); }
+  .features-section .section-title { color: var(--paper); }
+  .features-section .section-title em { color: rgba(245,243,238,0.4); }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .feature-card {
+    padding: 2rem; border-radius: 16px;
+    border: 1px solid rgba(245,243,238,0.08);
+    background: rgba(245,243,238,0.03);
+    transition: all 0.3s;
+  }
+  .feature-card:hover { background: rgba(245,243,238,0.06); border-color: rgba(201,168,76,0.2); transform: translateY(-2px); }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(26,107,107,0.2); display: grid; place-items: center;
+    margin-bottom: 1.2rem; font-size: 1.2rem;
+  }
+  .feature-name { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; color: var(--paper); margin-bottom: 0.5rem; }
+  .feature-desc { font-size: 0.85rem; color: rgba(245,243,238,0.45); line-height: 1.6; font-weight: 300; }
+
+  /* ── LIVE RESULTS TEASER ── */
+  .results-section { padding: 6rem 3rem; background: #fff; }
+  .results-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .results-visual {
+    background: var(--paper); border-radius: 24px; padding: 2rem;
+    border: 1px solid var(--border); position: relative;
+  }
+  .results-visual::before {
+    content: '🔴 LIVE';
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-size: 0.7rem; font-weight: 700; color: var(--accent);
+    background: rgba(230,57,70,0.08);
+    padding: 0.3rem 0.7rem; border-radius: 100px;
+    animation: blink 2s infinite;
+  }
+  .results-title { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--ink); }
+
+  .candidate-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+  .cand-avatar {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    display: grid; place-items: center; color: white; font-weight: 700; font-size: 0.8rem;
+  }
+  .cand-avatar.gold { background: linear-gradient(135deg, var(--gold), #f4d06f); color: white; }
+  .cand-avatar.red { background: linear-gradient(135deg, #e63946, #ff6b6b); }
+  .cand-info { flex: 1; }
+  .cand-name { font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; display: flex; justify-content: space-between; }
+  .cand-pct { font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 700; }
+  .cand-bar { height: 8px; background: rgba(10,10,15,0.06); border-radius: 100px; overflow: hidden; }
+  .cand-fill { height: 100%; border-radius: 100px; }
+
+  .turnout-widget {
+    margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .turnout-label { font-size: 0.75rem; color: var(--muted); }
+  .turnout-num { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--teal); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  .step-card { text-align: center; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 1rem;
+    background: var(--paper); border: 2px solid var(--teal);
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: var(--teal);
+  }
+  .step-title { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+  .step-connector { display: none; }
+
+  /* ── CTA ── */
+  .cta-section {
+    margin: 0 3rem 6rem; border-radius: 28px;
+    background: linear-gradient(135deg, var(--teal) 0%, #0d4f4f 100%);
+    padding: 5rem 4rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-bg-deco {
+    position: absolute; width: 500px; height: 500px; border-radius: 50%;
+    background: rgba(255,255,255,0.03); top: -200px; right: -100px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .cta-bg-deco-2 {
+    position: absolute; width: 300px; height: 300px; border-radius: 50%;
+    background: rgba(201,168,76,0.05); bottom: -100px; left: 50px;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  .cta-section h2 {
+    font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900; color: white; letter-spacing: -0.02em; margin-bottom: 1rem;
+  }
+  .cta-section h2 em { font-style: italic; font-weight: 300; color: rgba(255,255,255,0.6); }
+  .cta-section p { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 2.5rem; font-weight: 300; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+  .btn-white { background: white; color: var(--teal); border: none; padding: 0.9rem 2.2rem; border-radius: 100px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-white:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline-white { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.4); padding: 0.9rem 2.2rem; border-radius: 100px; font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-outline-white:hover { border-color: white; background: rgba(255,255,255,0.05); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); padding: 4rem 3rem 2rem;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem; }
+  .footer-brand .logo { font-size: 1.8rem; color: var(--paper); }
+  .footer-brand p { color: rgba(245,243,238,0.4); font-size: 0.85rem; margin-top: 0.5rem; max-width: 260px; line-height: 1.6; font-weight: 300; }
+  .footer-links h4 { color: rgba(245,243,238,0.5); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+  .footer-links ul { list-style: none; }
+  .footer-links ul li { margin-bottom: 0.6rem; }
+  .footer-links ul li a { color: rgba(245,243,238,0.5); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .footer-links ul li a:hover { color: var(--paper); }
+  .footer-bottom { border-top: 1px solid rgba(245,243,238,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { color: rgba(245,243,238,0.3); font-size: 0.8rem; }
+  .footer-badges { display: flex; gap: 0.8rem; }
+  .badge { font-size: 0.7rem; color: rgba(245,243,238,0.4); background: rgba(245,243,238,0.05); padding: 0.3rem 0.8rem; border-radius: 100px; border: 1px solid rgba(245,243,238,0.08); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap { display: flex; gap: 1rem; margin-bottom: 2.5rem; align-items: center; flex-wrap: wrap; }
+  .search-input {
+    flex: 1; min-width: 240px; padding: 0.75rem 1.2rem;
+    border: 1.5px solid var(--border); border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
+    background: white; color: var(--ink); outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--teal); }
+  .search-input::placeholder { color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Vote<span>Flow</span></div>
+  <div class="nav-links">
+    <a href="#">Elections</a>
+    <a href="#">How it Works</a>
+    <a href="#">For Organizations</a>
+    <button class="nav-btn">Sign In →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="deco-ring"></div>
+  <div class="deco-ring"></div>
+  <div class="deco-ring"></div>
+
+  <div class="hero-inner">
+    <div class="hero-badge">Secure · Transparent · Real-time</div>
+    <h1 class="hero-title">
+      Democracy,<br>
+      <em>engineered</em> for<br>
+      the <span class="gold">modern</span> age.
+    </h1>
+    <p class="hero-sub">A platform where votes are cryptographically protected, results are live, and every voice counts — exactly once.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Browse Elections <span class="arrow">→</span></button>
+      <button class="btn-ghost">Request Creator Access</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Active Elections</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">48,000+</div>
+        <div class="stat-label">Votes Cast</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">99.9%</div>
+        <div class="stat-label">Uptime</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Duplicate Votes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Email Verification</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Secret Voter IDs</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Anonymous Voting</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Live Results</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Audit Logs</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Row Level Security</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Role Based Access</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Voter Locking</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Countdown Timers</span><span class="marquee-dot">✦</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Email Verification</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Secret Voter IDs</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Anonymous Voting</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Live Results</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Audit Logs</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Row Level Security</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Role Based Access</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Voter Locking</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Countdown Timers</span><span class="marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- ELECTIONS -->
+<div class="section reveal">
+  <div class="section-header">
+    <div>
+      <div class="section-label">All Elections</div>
+      <h2 class="section-title">Ongoing & <em>Upcoming</em></h2>
+      <p class="section-sub">Browse live, upcoming, and completed elections. Join any open poll before the deadline.</p>
+    </div>
+    <div class="filter-tabs">
+      <button class="tab active">All</button>
+      <button class="tab">🔴 Live</button>
+      <button class="tab">Upcoming</button>
+      <button class="tab">Completed</button>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="Search elections by name, organization…">
+  </div>
+
+  <div class="elections-grid">
+
+    <!-- Card 1 - LIVE -->
+    <div class="election-card">
+      <div class="card-color-bar bar-red"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Student Body</span>
+          <span class="status-badge status-live"><span class="status-dot"></span>Live Now</span>
+        </div>
+        <h3 class="card-title">COMSATS University Student Council 2025</h3>
+        <p class="card-org">COMSATS University Islamabad — Vehari Campus</p>
+        <div class="card-progress-label"><span>Voter Turnout</span><span>743 / 1000</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-teal" style="width:74.3%"></div></div>
+        <div class="card-footer">
+          <div>
+            <div class="countdown">02:14:37</div>
+            <div class="countdown-label">Remaining</div>
+          </div>
+          <div class="voter-count">
+            <div class="voter-avatars">
+              <span>AK</span><span>SR</span><span>MT</span>
+            </div>
+            <span>+740 voted</span>
+          </div>
+          <button class="card-action-btn btn-vote">Cast Vote</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 - Upcoming -->
+    <div class="election-card">
+      <div class="card-color-bar bar-gold"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Corporate</span>
+          <span class="status-badge status-upcoming"><span class="status-dot"></span>Registration Open</span>
+        </div>
+        <h3 class="card-title">Board of Directors Election — Tech Alliance</h3>
+        <p class="card-org">Pakistan Tech Alliance, Lahore</p>
+        <div class="card-progress-label"><span>Registered Voters</span><span>312 / 500</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:62.4%"></div></div>
+        <div class="card-footer">
+          <div>
+            <div class="countdown" style="color:var(--gold)">3d 07h</div>
+            <div class="countdown-label">Until Start</div>
+          </div>
+          <div class="voter-count">
+            <div class="voter-avatars">
+              <span>FS</span><span>NR</span><span>IB</span>
+            </div>
+            <span>+309 joined</span>
+          </div>
+          <button class="card-action-btn btn-register">Join Election</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 - Completed -->
+    <div class="election-card">
+      <div class="card-color-bar" style="background:var(--muted)"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category" style="background:rgba(107,107,122,0.08);color:var(--muted)">Community</span>
+          <span class="status-badge status-completed"><span class="status-dot"></span>Completed</span>
+        </div>
+        <h3 class="card-title">Lahore Bar Association President 2024</h3>
+        <p class="card-org">Lahore Bar Association</p>
+        <div class="card-progress-label"><span>Final Turnout</span><span>891 / 1000</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:89.1%;background:var(--muted)"></div></div>
+        <div class="card-footer">
+          <div>
+            <div class="countdown" style="color:var(--muted)">Ended</div>
+            <div class="countdown-label">Dec 12, 2024</div>
+          </div>
+          <div class="voter-count"><span>891 votes cast</span></div>
+          <button class="card-action-btn btn-results">View Results</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 - Upcoming -->
+    <div class="election-card">
+      <div class="card-color-bar bar-teal"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">NGO</span>
+          <span class="status-badge status-upcoming"><span class="status-dot"></span>Registration Open</span>
+        </div>
+        <h3 class="card-title">Green Future Fund Leadership Vote</h3>
+        <p class="card-org">Green Future Pakistan Foundation</p>
+        <div class="card-progress-label"><span>Registered</span><span>89 / 200</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-teal" style="width:44.5%"></div></div>
+        <div class="card-footer">
+          <div>
+            <div class="countdown" style="color:var(--teal)">6d 12h</div>
+            <div class="countdown-label">Until Start</div>
+          </div>
+          <div class="voter-count"><span>89 joined</span></div>
+          <button class="card-action-btn btn-register">Join Election</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-inner reveal">
+    <div class="section-label">Why VoteFlow</div>
+    <h2 class="section-title" style="color:var(--paper)">Built for <em>trust,</em><br>designed for <em>scale.</em></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-name">Secret Voter IDs</div>
+        <div class="feature-desc">Every voter gets a unique cryptographic code. No name attached to any ballot.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-name">Live Vote Counting</div>
+        <div class="feature-desc">Realtime charts update every second. Watch democracy happen as it unfolds.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-name">Row Level Security</div>
+        <div class="feature-desc">Supabase RLS ensures users can only see and modify their own data. Zero leaks.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-name">Audit Trail</div>
+        <div class="feature-desc">Every login, vote, edit, and approval is timestamped and downloadable.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <div class="feature-name">Auto-Lock & Freeze</div>
+        <div class="feature-desc">Voter list freezes at capacity. No late entries, no manipulation, no exceptions.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📬</div>
+        <div class="feature-name">Email Automation</div>
+        <div class="feature-desc">Approvals, secret IDs, reminders — all sent automatically via Resend API.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <div class="feature-name">Role-Based Access</div>
+        <div class="feature-desc">Three distinct roles: Super Admin, Election Creator, Voter — each perfectly scoped.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-name">One-Click Deploy</div>
+        <div class="feature-desc">Frontend + serverless API routes — the whole stack lives on Vercel.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE RESULTS PREVIEW -->
+<section class="results-section">
+  <div class="results-inner reveal">
+    <div>
+      <div class="section-label">Live Results</div>
+      <h2 class="section-title">Watch your <em>election</em><br>come to life.</h2>
+      <p class="section-sub" style="margin-bottom:2rem">Real-time charts powered by Recharts and Supabase Realtime. No page refresh needed.</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="display:flex;gap:0.75rem;align-items:center;font-size:0.9rem"><span style="color:var(--teal);font-size:1.1rem">✓</span> Candidate-wise live vote bars</li>
+        <li style="display:flex;gap:0.75rem;align-items:center;font-size:0.9rem"><span style="color:var(--teal);font-size:1.1rem">✓</span> Turnout percentage in real-time</li>
+        <li style="display:flex;gap:0.75rem;align-items:center;font-size:0.9rem"><span style="color:var(--teal);font-size:1.1rem">✓</span> Winner auto-declared when election closes</li>
+        <li style="display:flex;gap:0.75rem;align-items:center;font-size:0.9rem"><span style="color:var(--teal);font-size:1.1rem">✓</span> Results locked permanently after end time</li>
+      </ul>
+    </div>
+    <div class="results-visual">
+      <div class="results-title">COMSATS Student Council — Live Tally</div>
+
+      <div class="candidate-row">
+        <div class="cand-avatar">AK</div>
+        <div class="cand-info">
+          <div class="cand-name">Ahmed Khan <span class="cand-pct" style="color:var(--teal)">38%</span></div>
+          <div class="cand-bar"><div class="cand-fill" style="width:38%;background:linear-gradient(90deg,var(--teal),var(--teal-light))"></div></div>
+        </div>
+      </div>
+
+      <div class="candidate-row">
+        <div class="cand-avatar gold">SR</div>
+        <div class="cand-info">
+          <div class="cand-name">Sara Raza <span class="cand-pct" style="color:var(--gold)">34%</span></div>
+          <div class="cand-bar"><div class="cand-fill" style="width:34%;background:linear-gradient(90deg,var(--gold),#f4d06f)"></div></div>
+        </div>
+      </div>
+
+      <div class="candidate-row">
+        <div class="cand-avatar red">MT</div>
+        <div class="cand-info">
+          <div class="cand-name">Malik Tariq <span class="cand-pct" style="color:var(--accent)">28%</span></div>
+          <div class="cand-bar"><div class="cand-fill" style="width:28%;background:linear-gradient(90deg,var(--accent),#ff6b6b)"></div></div>
+        </div>
+      </div>
+
+      <div class="turnout-widget">
+        <div>
+          <div class="turnout-num">74.3%</div>
+          <div class="turnout-label">Voter Turnout</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700">743</div>
+          <div class="turnout-label">of 1000 voted</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--accent)">02:14:37</div>
+          <div class="turnout-label">Time Left</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section reveal">
+  <div class="section-label">Process</div>
+  <h2 class="section-title">From request <em>to results</em><br>in four steps.</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Request Access</div>
+      <div class="step-desc">Submit your organization info. Admin reviews and approves your election creator account.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Create Election</div>
+      <div class="step-desc">Set max voters, deadlines, add candidates with photos and manifestos. Publish.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Voters Register</div>
+      <div class="step-desc">Eligible users opt in before the deadline. List auto-locks at capacity. Secret IDs emailed.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">Vote & See Live</div>
+      <div class="step-desc">Authorized voters cast one anonymous vote. Watch results update in real-time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <div class="cta-bg-deco"></div>
+  <div class="cta-bg-deco-2"></div>
+  <h2>Ready to run your <em>first election?</em></h2>
+  <p>Join organizations already running secure, transparent polls on VoteFlow.</p>
+  <div class="cta-actions">
+    <button class="btn-white">Request Creator Access →</button>
+    <button class="btn-outline-white">View Documentation</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo" style="color:var(--paper)">Vote<span>Flow</span></div>
+        <p>Secure, transparent, and beautiful digital elections for the modern world.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Browse Elections</a></li>
+          <li><a href="#">Create Election</a></li>
+          <li><a href="#">Admin Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Security</h4>
+        <ul>
+          <li><a href="#">How Votes Work</a></li>
+          <li><a href="#">Audit Logs</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Tech Stack</h4>
+        <ul>
+          <li><a href="#">Next.js + Vercel</a></li>
+          <li><a href="#">Supabase</a></li>
+          <li><a href="#">GitHub Repo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 VoteFlow. Built with ☕ for a semester project that slaps.</p>
+      <div class="footer-badges">
+        <span class="badge">Next.js 14</span>
+        <span class="badge">Supabase</span>
+        <span class="badge">Vercel</span>
+        <span class="badge">Recharts</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Filter tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Live countdown animation
+  let h = 2, m = 14, s = 37;
+  setInterval(() => {
+    s--; if (s < 0) { s = 59; m--; if (m < 0) { m = 59; h--; } }
+    const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.querySelectorAll('.countdown').forEach((el, i) => {
+      if (i === 0) el.textContent = str;
+      if (i === 3) el.textContent = str; // results section
+    });
+  }, 1000);
+</script>
+
+</body>
+</html>

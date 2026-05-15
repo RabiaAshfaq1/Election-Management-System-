@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #0a0a0f;
+  --paper: #f5f3ee;
+  --teal: #1a6b6b;
+  --teal-light: #2a9d8f;
+  --gold: #c9a84c;
+  --accent: #e63946;
+  --muted: #6b6b7a;
+  --border: rgba(10, 10, 15, 0.08);
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hero decorative rings */
+.hero-rings::before,
+.hero-rings::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 107, 107, 0.15);
+}
+
+.hero-rings::before {
+  inset: 12%;
+  animation: ring-pulse 8s ease-in-out infinite;
+}
+
+.hero-rings::after {
+  inset: 28%;
+  animation: ring-pulse 8s ease-in-out infinite 1.5s;
+  border-color: rgba(201, 168, 76, 0.2);
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Marquee */
+.marquee-track {
+  animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-right: 3rem;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-teal px-5 py-2.5 text-sm font-semibold text-paper transition hover:bg-teal-light active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-paper active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+}
