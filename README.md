@@ -140,7 +140,7 @@ To vote in **someone else’s** election: `/elections` → register → vote whe
 - Cloudflare Turnstile on login/signup
 - Rate limiting (login + voting APIs)
 - Zod validation + HTML sanitization on all inputs
-- Resend transactional emails + hourly cron reminders
+- Resend transactional emails + daily cron reminders (Vercel Hobby–compatible)
 
 ---
 
@@ -309,9 +309,9 @@ Without this, signup/login return **CAPTCHA verification failed** in production.
 
 ### 5. Cron job (optional)
 
-`vercel.json` registers an hourly cron at `/api/cron/election-reminders`. Set `CRON_SECRET` in Vercel (same value Vercel sends as `Authorization: Bearer …`).
+`vercel.json` runs `/api/cron/election-reminders` **once per day** at 09:00 UTC (`0 9 * * *`) — compatible with Vercel **Hobby**. Set `CRON_SECRET` in environment variables.
 
-> Cron on Vercel usually needs a **Pro** plan. On Hobby you can ignore cron; reminders will not run until you upgrade.
+> Hourly crons (`0 * * * *`) require **Pro**. For more frequent reminders, upgrade or trigger the route manually during testing.
 
 ### 6. Post-deploy smoke test
 
