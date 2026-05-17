@@ -21,7 +21,7 @@ const MAX_STORE_SIZE = 10_000;
 function pruneStore() {
   if (store.size <= MAX_STORE_SIZE) return;
   const now = Date.now();
-  for (const [key, bucket] of store) {
+  for (const [key, bucket] of Array.from(store.entries())) {
     if (bucket.resetAt <= now) {
       store.delete(key);
     }

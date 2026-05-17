@@ -59,7 +59,10 @@ function rankCandidates(
   candidates: Candidate[],
   voteMap: Map<string, number>
 ): ResultsCandidate[] {
-  const totalVotes = [...voteMap.values()].reduce((sum, n) => sum + n, 0);
+  const totalVotes = Array.from(voteMap.values()).reduce(
+    (sum, n) => sum + n,
+    0
+  );
 
   const ranked = candidates
     .map((candidate, index) => {

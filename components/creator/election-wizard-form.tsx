@@ -220,7 +220,8 @@ export function ElectionWizardForm({
                     </option>
                   ))}
                 </select>
-                {errors.category && (
+                {errors.category &&
+                  typeof errors.category.message === "string" && (
                   <p className="mt-1.5 text-xs text-accent">
                     {errors.category.message}
                   </p>

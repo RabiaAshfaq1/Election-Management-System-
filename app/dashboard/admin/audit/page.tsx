@@ -1,6 +1,8 @@
 import { AuditTrail } from "@/components/admin/audit-trail";
 import { fetchAuditLogs } from "@/lib/audit/queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminAuditPage() {
   const initialData = await fetchAuditLogs({ page: 1 });
 

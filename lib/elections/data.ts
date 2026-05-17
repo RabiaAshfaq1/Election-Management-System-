@@ -83,7 +83,7 @@ export async function getPublicElections(): Promise<PublicElection[]> {
 
   try {
     const admin = createAdminClient();
-    const creatorIds = [...new Set(elections.map((e) => e.creator_id))];
+    const creatorIds = Array.from(new Set(elections.map((e) => e.creator_id)));
     const { data: requests } = await admin
       .from("election_requests")
       .select("creator_id, organization")
@@ -250,5 +250,5 @@ export function extractCategories(elections: PublicElection[]): string[] {
   for (const e of elections) {
     if (e.category?.trim()) set.add(e.category.trim());
   }
-  return [...set].sort((a, b) => a.localeCompare(b));
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
 }

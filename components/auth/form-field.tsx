@@ -1,14 +1,21 @@
 "use client";
 
 import type { InputHTMLAttributes } from "react";
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import type {
+  FieldError,
+  FieldErrorsImpl,
+  Merge,
+  UseFormRegisterReturn,
+} from "react-hook-form";
 
 import { cn } from "@/lib/utils";
+
+type FormFieldError = FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
 
 interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   registration: UseFormRegisterReturn;
-  error?: FieldError;
+  error?: FormFieldError;
 }
 
 export function FormField({
@@ -39,7 +46,7 @@ export function FormField({
           className
         )}
       />
-      {error && (
+      {error && typeof error.message === "string" && (
         <p className="mt-1.5 text-xs text-accent" role="alert">
           {error.message}
         </p>

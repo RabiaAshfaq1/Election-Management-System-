@@ -31,7 +31,9 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     const { data: election, error: electionError } = await supabase
       .from("elections")
-      .select("id, title, status, registration_deadline, max_voters")
+      .select(
+        "id, title, status, start_time, end_time, registration_deadline, max_voters"
+      )
       .eq("id", electionId)
       .in("status", ["published", "active"])
       .maybeSingle();
@@ -143,7 +145,7 @@ export async function POST(request: Request, { params }: RouteContext) {
         });
       }
     } catch {
-      // registration succeeded; audit/lock are best-effort
+      // Registration succeeded; audit/lock are best-effort.
     }
 
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { getDashboardPathForRole, getUserRole } from "@/lib/auth";
@@ -8,6 +9,12 @@ import {
   RATE_LIMITS,
 } from "@/lib/rate-limit";
 import type { UserRole } from "@/lib/types";
+
+type CookieToSet = {
+  name: string;
+  value: string;
+  options?: Partial<ResponseCookie>;
+};
 
 const ROLE_ROUTES: Record<string, UserRole> = {
   "/dashboard/admin": "super_admin",
@@ -106,7 +113,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieToSet[]) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
