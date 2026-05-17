@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { SignOutButton } from "@/components/dashboard/sign-out-button";
 import { cn } from "@/lib/utils";
 
 export interface NavItem {
@@ -29,7 +30,7 @@ export function SidebarNav({
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-6 py-6">
         <Link href={homeHref} className="block">
           <span className="font-heading text-xl font-bold text-ink">
@@ -68,9 +69,13 @@ export function SidebarNav({
         })}
       </nav>
 
-      {footer && (
+      {footer ? (
         <div className="border-t border-border px-4 py-4">{footer}</div>
-      )}
-    </>
+      ) : null}
+
+      <div className="mt-auto border-t border-border px-3 py-4">
+        <SignOutButton />
+      </div>
+    </div>
   );
 }

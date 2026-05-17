@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { CreatorStats } from "@/components/creator/creator-stats";
-import type { ElectionCardData } from "@/components/creator/election-cards";
+import type { ElectionCardData } from "@/lib/dashboard/types";
 
 interface CreatorOverviewProps {
   activeCount: number;

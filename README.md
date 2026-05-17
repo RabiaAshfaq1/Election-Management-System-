@@ -19,6 +19,99 @@ VoteFlow is a full-stack election platform for universities, organizations, and 
 
 ---
 
+## Application flow (step by step)
+
+### Roles — who can do what
+
+| Role | Dashboard | How you get it |
+|------|-----------|----------------|
+| **Voter** | `/dashboard/voter` | Default on sign up |
+| **Election Creator** | `/dashboard/creator` | Voter dashboard → **Become election creator** (one click), or SQL |
+| **Super Admin** | `/dashboard/admin` | SQL only (one platform owner recommended) |
+
+- Each account has **one role at a time** — admin login opens admin dashboard, not voter dashboard.
+- **Sign out** is at the bottom of the sidebar on all three dashboards.
+
+### Auth flow
+
+- **Sign up** → `/auth/signup` → confirm email (inbox link) → **Sign in** → `/auth/login`
+- After login you are redirected to the dashboard for your role.
+- Supabase **Site URL** + redirect: `http://localhost:3000/auth/callback` (local) or your Vercel URL (production).
+
+### Super Admin flow
+
+1. Sign up with your email and verify it.
+2. In Supabase SQL Editor run:
+
+   ```sql
+   UPDATE public.profiles
+   SET role = 'super_admin', is_approved = TRUE
+   WHERE email = 'your@email.com';
+   ```
+
+3. Sign out → sign in again → `/dashboard/admin`
+4. You can:
+   - View **Overview**, **All Elections**, **All Users**, **Audit Logs**, **Settings**
+   - Review **Requests** (legacy creator-request table; optional for demo)
+   - Approve/reject old creator requests if any exist
+
+### Voter flow
+
+1. Sign up / sign in → `/dashboard/voter`
+2. **Browse elections** → `/elections` or homepage **Browse Elections**
+3. Open an election → **I Want to Participate** → accept terms → registered
+4. When the creator **finalizes voters**, you receive a **secret voter ID** (`POLL-XXXX-####`) by email
+5. When the election is **active**, open the election → **Cast Your Vote** → enter secret ID → pick candidate → confirm
+6. After voting, view **Results** on `/dashboard/voter/results` or `/elections/[id]/results`
+7. Optional: join **waitlist** if registration is full (deadline still open)
+
+### Election Creator flow
+
+1. From voter dashboard → **Become election creator** (confirm twice) → `/dashboard/creator`
+2. **Create New** → `/dashboard/creator/create` — 3-step wizard:
+   - Step 1: title, description, category
+   - Step 2: start/end times, registration deadline, max voters
+   - Step 3: review → **Save as Draft** or **Publish**
+3. **My Elections** → open election → **Edit** (draft only) or manage actions:
+   - Add **candidates** (photos via Supabase Storage)
+   - **Publish** (if still draft)
+   - **Finalize voters** — assigns `POLL-XXXX-####` IDs and emails registered voters
+   - **Start election** — status becomes `active` (voting open)
+   - **Stop election** — closes voting
+   - View **live results** / export CSV when applicable
+4. Election statuses: `draft` → `published` → `active` → `completed`
+
+### Creator voting (yes, creators can vote)
+
+Creators do **not** vote from `/dashboard/voter`. They vote from the **public election page**:
+
+1. Publish election and add candidates
+2. Go to **`/elections/[your-election-id]`** while logged in
+3. **Register** as a participant (same account as creator)
+4. **Finalize voters** (includes you if registered) → secret ID by email
+5. **Start** the election
+6. **Cast Your Vote** on `/elections/[id]/vote` with your secret ID
+
+To vote in **someone else’s** election: `/elections` → register → vote when active (creator role is fine; login required).
+
+### End-to-end demo (recommended)
+
+1. **Account A** — SQL → `super_admin` → manage platform
+2. **Account B** — sign up → **Become election creator** → create & run an election
+3. **Account C** (or B on `/elections/...`) — register → vote when active
+4. Everyone views **results** after the election ends
+
+### Local dev quick checklist
+
+- [ ] `npm install` → `npm run dev` → http://localhost:3000
+- [ ] `.env.local` filled (Supabase URL + publishable/secret keys)
+- [ ] All 5 SQL files run in Supabase (see below)
+- [ ] Email verification enabled; test signup/login
+- [ ] One `super_admin` via SQL
+- [ ] `npm run build` passes before Vercel deploy
+
+---
+
 ## Features
 
 ### Platform & admin
@@ -28,6 +121,7 @@ VoteFlow is a full-stack election platform for universities, organizations, and 
 - Immutable audit trail with filters and CSV export
 
 ### Election creators
+- One-click **Become election creator** from the voter dashboard (no admin approval required for demo)
 - Multi-step election wizard (draft → publish → active → completed)
 - Candidate management with photo uploads (Supabase Storage)
 - Finalize voters — generate `POLL-XXXX-####` secret IDs and email voters

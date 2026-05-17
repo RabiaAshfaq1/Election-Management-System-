@@ -1,6 +1,6 @@
 // SERVER ONLY — never import in client components
 
-import type { ElectionCardData } from "@/components/creator/election-cards";
+import type { ElectionCardData } from "@/lib/dashboard/types";
 
 export async function getCreatorElections(
   supabase: ReturnType<typeof import("@/lib/supabase-server").createClient>,

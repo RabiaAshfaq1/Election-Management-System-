@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { BecomeCreatorButton } from "@/components/voter/become-creator-button";
 import { VoterOverview } from "@/components/voter/voter-overview";
 import { requireRole } from "@/lib/auth-server";
 import { getVoterElections } from "@/lib/dashboard/voter-data";
@@ -28,6 +29,10 @@ export default async function VoterDashboardPage() {
         >
           Browse elections
         </Link>
+      </div>
+
+      <div className="mb-8">
+        <BecomeCreatorButton />
       </div>
 
       <VoterOverview

@@ -1,17 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { AuthGuardError } from "@/lib/auth-guard-error";
 import { getUserRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase-server";
 import type { UserRole } from "@/lib/types";
 
-export class AuthGuardError extends Error {
-  readonly status: 401 | 403;
-
-  constructor(status: 401 | 403, message: string) {
-    super(message);
-    this.status = status;
-  }
-}
+export { AuthGuardError };
 
 export interface AuthSession {
   supabase: ReturnType<typeof createClient>;

@@ -8,20 +8,9 @@ import { motion } from "framer-motion";
 import { ElectionCardActions } from "@/components/creator/election-card-actions";
 import { StatusBadge } from "@/components/creator/status-badge";
 import { EmptyState } from "@/components/dashboard/empty-state";
-import type { ElectionStatus } from "@/lib/types";
+import type { ElectionCardData } from "@/lib/dashboard/types";
 
-export interface ElectionCardData {
-  id: string;
-  title: string;
-  description: string | null;
-  category: string | null;
-  status: ElectionStatus;
-  start_time: string | null;
-  end_time: string | null;
-  registration_deadline: string | null;
-  max_voters: number;
-  voter_count?: number;
-}
+export type { ElectionCardData };
 
 interface ElectionCardsProps {
   elections: ElectionCardData[];

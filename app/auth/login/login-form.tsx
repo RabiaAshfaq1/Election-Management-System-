@@ -62,32 +62,48 @@ export function LoginForm() {
       return;
     }
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-        turnstileToken: turnstileToken ?? "dev-bypass",
-      }),
-    });
-
-    const payload = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      turnstileRef.current?.reset();
-      toast.error(
-        typeof payload.error === "string" ? payload.error : "Sign in failed"
-      );
-      return;
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+      const captchaRes = await fetch("/api/auth/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          turnstileToken: turnstileToken ?? "dev-bypass",
+        }),
+      });
+      if (!captchaRes.ok) {
+        turnstileRef.current?.reset();
+        const captchaPayload = await captchaRes.json().catch(() => ({}));
+        toast.error(
+          typeof captchaPayload.error === "string"
+            ? captchaPayload.error
+            : "CAPTCHA verification failed"
+        );
+        return;
+      }
     }
 
     const supabase = createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (signInError) {
+      turnstileRef.current?.reset();
+      const message = signInError.message.toLowerCase().includes("email not confirmed")
+        ? "Please verify your email first. Check your inbox for the confirmation link."
+        : signInError.message;
+      toast.error(message);
+      return;
+    }
+
     const redirectTo = searchParams.get("redirectTo");
     const dashboardPath = await redirectToDashboard(supabase);
 
     if (!dashboardPath) {
-      toast.error("Unable to load your profile. Please contact support.");
+      toast.error(
+        "Signed in, but your profile could not be loaded. Run the super_admin SQL in Supabase or contact support."
+      );
       await supabase.auth.signOut();
       turnstileRef.current?.reset();
       return;

@@ -47,7 +47,9 @@ function applyRateLimit(request: NextRequest): NextResponse | null {
 
   if (
     method === "POST" &&
-    (pathname === "/api/auth/login" || pathname === "/api/auth/signup")
+    (pathname === "/api/auth/login" ||
+      pathname === "/api/auth/signup" ||
+      pathname === "/api/auth/verify-captcha")
   ) {
     const result = checkRateLimit(
       `login:${ip}`,
@@ -169,6 +171,7 @@ export const config = {
     "/auth/:path*",
     "/api/auth/login",
     "/api/auth/signup",
+    "/api/auth/verify-captcha",
     "/api/elections/:path*/vote",
     "/api/elections/:path*/verify-secret-id",
   ],

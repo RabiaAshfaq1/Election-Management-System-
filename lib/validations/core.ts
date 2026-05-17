@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { AuthGuardError } from "@/lib/auth-guard";
+import { AuthGuardError } from "@/lib/auth-guard-error";
 
 export const LIMITS = {
   name: 120,
@@ -29,19 +29,28 @@ export function sanitizedString(options: {
   max: number;
   min?: number;
   label?: string;
+  regex?: { pattern: RegExp; message: string };
 }) {
-  const { max, min = 0, label = "Value" } = options;
+  const { max, min = 0, label = "Value", regex } = options;
 
-  return z
+  let inner = z
     .string()
-    .transform((val) => stripHtml(val))
-    .pipe(
-      z
-        .string()
-        .min(min, min > 0 ? `${label} must be at least ${min} characters` : undefined)
-        .max(max, `${label} must be at most ${max} characters`)
-    );
+    .min(min, min > 0 ? `${label} must be at least ${min} characters` : undefined)
+    .max(max, `${label} must be at most ${max} characters`);
+
+  if (regex) {
+    inner = inner.regex(regex.pattern, regex.message);
+  }
+
+  return z.string().transform((val) => stripHtml(val)).pipe(inner);
 }
+
+export const phoneSchema = sanitizedString({
+  max: LIMITS.phone,
+  min: 10,
+  label: "Phone",
+  regex: { pattern: /^[\d\s+\-()]+$/, message: "Enter a valid phone number" },
+});
 
 export const emailSchema = z
   .string()
@@ -72,10 +81,7 @@ export const signupApiSchema = z
   .object({
     fullName: sanitizedString({ max: LIMITS.name, min: 2, label: "Name" }),
     email: emailSchema,
-    phone: sanitizedString({ max: LIMITS.phone, min: 10, label: "Phone" }).regex(
-      /^[\d\s+\-()]+$/,
-      "Enter a valid phone number"
-    ),
+    phone: phoneSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
     turnstileToken: turnstileTokenSchema,

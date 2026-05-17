@@ -4,6 +4,7 @@ import {
   emailSchema,
   LIMITS,
   passwordSchema,
+  phoneSchema,
   sanitizedString,
 } from "@/lib/validations/core";
 
@@ -11,10 +12,7 @@ export const signupSchema = z
   .object({
     fullName: sanitizedString({ max: LIMITS.name, min: 2, label: "Name" }),
     email: emailSchema,
-    phone: sanitizedString({ max: LIMITS.phone, min: 10, label: "Phone" }).regex(
-      /^[\d\s+\-()]+$/,
-      "Enter a valid phone number"
-    ),
+    phone: phoneSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
   })
