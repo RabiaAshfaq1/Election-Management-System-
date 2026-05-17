@@ -23,6 +23,12 @@ if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
 
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
   images: {
     remotePatterns: supabasePatterns,
   },

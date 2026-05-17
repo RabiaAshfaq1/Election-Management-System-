@@ -37,19 +37,37 @@ export const electionScheduleFieldsSchema = z.object({
     .max(1_000_000),
 });
 
+function hasScheduleFields(
+  data: unknown
+): data is z.infer<typeof electionScheduleFieldsSchema> {
+  if (!data || typeof data !== "object") return false;
+  const row = data as Record<string, unknown>;
+  return (
+    typeof row.start_time === "string" &&
+    typeof row.end_time === "string" &&
+    typeof row.registration_deadline === "string"
+  );
+}
+
 const scheduleRefinements = <T extends z.ZodTypeAny>(schema: T) =>
   schema
     .refine(
-      (data: z.infer<typeof electionScheduleFieldsSchema>) =>
-        new Date(data.end_time) > new Date(data.start_time),
+      (data) => {
+        if (!hasScheduleFields(data)) return false;
+        return new Date(data.end_time) > new Date(data.start_time);
+      },
       {
         message: "End time must be after start time",
         path: ["end_time"],
       }
     )
     .refine(
-      (data: z.infer<typeof electionScheduleFieldsSchema>) =>
-        new Date(data.registration_deadline) <= new Date(data.start_time),
+      (data) => {
+        if (!hasScheduleFields(data)) return false;
+        return (
+          new Date(data.registration_deadline) <= new Date(data.start_time)
+        );
+      },
       {
         message: "Registration deadline must be on or before start time",
         path: ["registration_deadline"],

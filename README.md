@@ -309,9 +309,11 @@ Without this, signup/login return **CAPTCHA verification failed** in production.
 
 ### 5. Cron job (optional)
 
-`vercel.json` runs `/api/cron/election-reminders` **once per day** at 09:00 UTC (`0 9 * * *`) — compatible with Vercel **Hobby**. Set `CRON_SECRET` in environment variables.
+**Cron (optional):** `vercel.json` has no cron on **Hobby** (hourly/daily crons can block deploy). Election reminder emails still work when creators start/stop elections. To enable daily cron later, add to `vercel.json` on **Pro**:
 
-> Hourly crons (`0 * * * *`) require **Pro**. For more frequent reminders, upgrade or trigger the route manually during testing.
+```json
+{ "crons": [{ "path": "/api/cron/election-reminders", "schedule": "0 9 * * *" }] }
+```
 
 ### 6. Post-deploy smoke test
 
