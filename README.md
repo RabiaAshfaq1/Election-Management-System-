@@ -237,52 +237,89 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### 1. Push to GitHub
 
-```bash
+From the project folder (PowerShell):
+
+```powershell
+cd "c:\Users\MCS\OneDrive\Documents\GitHub\FA23-BSE-074-5B-Rabia-Ashfaq\Election-Management-System-"
+
 git add .
-git commit -m "feat: initial VoteFlow election management system"
+git commit -m "feat: VoteFlow election management system ready for deploy"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/Election-Management-System-.git
 git push -u origin main
 ```
 
-### 2. Import in Vercel
+Replace `YOUR_USERNAME` and repo name with your GitHub repo. Skip `remote add` if origin already exists.
 
-1. Go to [vercel.com/new](https://vercel.com/new) and import your GitHub repository.
-2. Framework preset: **Next.js** (auto-detected).
-3. Add **all** environment variables from `.env.example` (use production URLs and secrets).
-4. Set `NEXT_PUBLIC_APP_URL` to your Vercel URL (e.g. `https://voteflow.vercel.app`).
-
-### 3. Cron job
-
-`vercel.json` registers an hourly cron for election reminders:
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron/election-reminders",
-      "schedule": "0 * * * *"
-    }
-  ]
-}
-```
-
-On Vercel, set `CRON_SECRET` in Environment Variables. Vercel sends it as `Authorization: Bearer <CRON_SECRET>` to cron routes.
-
-> **Note:** Cron jobs require Vercel **Pro** (or compatible plan).
-
-### 4. Supabase redirect URLs
-
-In Supabase → Authentication → URL configuration, add:
-
-- Site URL: `https://your-app.vercel.app`
-- Redirect URLs: `https://your-app.vercel.app/auth/callback`
-
-### 5. Deploy
-
-Click **Deploy**. Run a production build locally first if needed:
+Optional local check before push:
 
 ```bash
+npm install
 npm run build
 ```
+
+### 2. Import on Vercel
+
+1. Open [vercel.com/new](https://vercel.com/new) → **Import** your GitHub repo.
+2. Framework: **Next.js** (auto-detected). Root directory: `.` (default).
+3. **Environment Variables** — add every row below (Production + Preview + Development):
+
+| Variable | Value |
+|----------|--------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://vuwdwfrfnhhyvkzwteti.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase **Publishable** key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase **Secret** key (server only) |
+| `NEXT_PUBLIC_APP_URL` | `https://YOUR-PROJECT.vercel.app` (update after first deploy) |
+| `RESEND_API_KEY` | From [resend.com](https://resend.com) |
+| `RESEND_FROM_EMAIL` | Verified sender, e.g. `VoteFlow <onboarding@resend.dev>` |
+| `CRON_SECRET` | Random string, e.g. `openssl rand -hex 32` |
+| `EMAIL_API_SECRET` | Another random string |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret |
+
+4. Click **Deploy** and wait for the build to finish.
+5. Copy your live URL (e.g. `https://voteflow-xxx.vercel.app`).
+6. Vercel → **Settings → Environment Variables** → set `NEXT_PUBLIC_APP_URL` to that URL → **Redeploy** (Deployments → ⋮ → Redeploy).
+
+> **Never** commit `.env.local` — it stays on your machine only.
+
+### 3. Supabase (required after deploy)
+
+[Supabase → Authentication → URL configuration](https://supabase.com/dashboard/project/vuwdwfrfnhhyvkzwteti/auth/url-configuration):
+
+- **Site URL:** `https://YOUR-PROJECT.vercel.app`
+- **Redirect URLs:** `https://YOUR-PROJECT.vercel.app/auth/callback`
+
+Make yourself admin (SQL Editor):
+
+```sql
+UPDATE public.profiles
+SET role = 'super_admin', is_approved = TRUE
+WHERE email = 'your@email.com';
+```
+
+### 4. Cloudflare Turnstile (required for login/signup on production)
+
+In [Turnstile dashboard](https://dash.cloudflare.com/), edit your widget → add hostname:
+
+- `YOUR-PROJECT.vercel.app`
+- `*.vercel.app` (optional, for preview deploys)
+
+Without this, signup/login return **CAPTCHA verification failed** in production.
+
+### 5. Cron job (optional)
+
+`vercel.json` registers an hourly cron at `/api/cron/election-reminders`. Set `CRON_SECRET` in Vercel (same value Vercel sends as `Authorization: Bearer …`).
+
+> Cron on Vercel usually needs a **Pro** plan. On Hobby you can ignore cron; reminders will not run until you upgrade.
+
+### 6. Post-deploy smoke test
+
+- [ ] Homepage loads
+- [ ] Sign up → verify email → sign in
+- [ ] Voter dashboard → become creator → create election
+- [ ] Browse elections on live URL
+- [ ] Admin SQL user can open `/dashboard/admin`
 
 ---
 
