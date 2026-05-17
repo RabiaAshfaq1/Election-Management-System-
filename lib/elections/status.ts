@@ -24,13 +24,27 @@ export function hasAvailableSpots(
   return election.voter_count < election.max_voters;
 }
 
-export function canRegisterForElection(election: ElectionTimingFields) {
+export type ElectionRegistrationFields = Pick<
+  ElectionTimingFields,
+  | "status"
+  | "registration_deadline"
+  | "voter_count"
+  | "max_voters"
+  | "registrations_locked"
+>;
+
+export function canRegisterForElection(election: ElectionRegistrationFields) {
   if (!["published", "active"].includes(election.status)) return false;
   if (!isRegistrationDeadlineOpen(election)) return false;
   return hasAvailableSpots(election);
 }
 
-export function isElectionFull(election: ElectionTimingFields) {
+export function isElectionFull(
+  election: Pick<
+    ElectionTimingFields,
+    "voter_count" | "max_voters" | "registrations_locked"
+  >
+) {
   return (
     election.registrations_locked ||
     election.voter_count >= election.max_voters
