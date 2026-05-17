@@ -11,24 +11,37 @@ const config: Config = {
       colors: {
         ink: "var(--ink)",
         paper: "var(--paper)",
+        paper2: "var(--paper2)",
         teal: {
           DEFAULT: "var(--teal)",
           light: "var(--teal-light)",
+          2: "var(--teal2)",
+          3: "var(--teal3)",
         },
-        gold: "var(--gold)",
+        gold: {
+          DEFAULT: "var(--gold)",
+          2: "var(--gold2)",
+        },
         accent: "var(--accent)",
         muted: "var(--muted)",
         border: "var(--border)",
+        glass: {
+          DEFAULT: "var(--glass-bg)",
+          border: "var(--glass-border)",
+        },
       },
       fontFamily: {
         heading: ["var(--font-fraunces)", "Georgia", "serif"],
-        body: ["var(--font-dm-sans)", "system-ui", "sans-serif"],
+        body: ["var(--font-geist)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
         "2xl": "1rem",
       },
       boxShadow: {
-        card: "0 4px 24px -4px rgba(10, 10, 15, 0.08)",
+        soft: "var(--shadow-soft)",
+        card: "var(--shadow-card)",
+        hover: "var(--shadow-hover)",
       },
     },
   },

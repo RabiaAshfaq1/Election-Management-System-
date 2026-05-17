@@ -108,7 +108,7 @@ export function ElectionActionPanel({
           </p>
           <Link
             href={loginHref}
-            className="block w-full rounded-xl bg-teal py-3.5 text-center text-sm font-semibold text-paper transition hover:bg-teal-light"
+            className="btn-primary w-full py-3.5"
           >
             Sign in to participate
           </Link>
@@ -120,7 +120,7 @@ export function ElectionActionPanel({
       return (
         <Link
           href={`/elections/${election.id}/results`}
-          className="block w-full rounded-xl bg-teal py-3.5 text-center text-sm font-semibold text-paper transition hover:bg-teal-light"
+          className="btn-primary w-full py-3.5"
         >
           View Results
         </Link>
@@ -132,7 +132,7 @@ export function ElectionActionPanel({
         return (
           <Link
             href={`/elections/${election.id}/vote`}
-            className="block w-full rounded-xl bg-teal py-3.5 text-center text-sm font-semibold text-paper transition hover:bg-teal-light"
+            className="btn-primary w-full py-3.5"
           >
             Cast Your Vote
           </Link>
@@ -141,7 +141,7 @@ export function ElectionActionPanel({
 
       if (election.status === "active" && registration.has_voted) {
         return (
-          <div className="rounded-xl border border-teal/20 bg-teal/5 p-4 text-center">
+          <div className="rounded-xl border border-teal/20 bg-teal/5 p-4 text-center shadow-soft">
             <CheckCircle2 className="mx-auto h-8 w-8 text-teal" />
             <p className="mt-2 text-sm font-medium text-ink">
               You have already cast your vote.
@@ -157,7 +157,7 @@ export function ElectionActionPanel({
       }
 
       return (
-        <div className="rounded-xl border border-gold/30 bg-gold/10 p-4">
+        <div className="rounded-xl border border-gold/30 bg-gold/10 p-4 shadow-soft">
           <p className="text-sm font-medium text-ink">
             You&apos;re registered!
           </p>
@@ -171,7 +171,7 @@ export function ElectionActionPanel({
     if (full || !deadlineOpen) {
       if (onWaitlist) {
         return (
-          <div className="rounded-xl border border-border bg-paper p-4 text-center">
+          <div className="rounded-xl border border-border bg-white/60 p-4 text-center shadow-soft">
             <p className="text-sm font-medium text-ink">
               You&apos;re on the waitlist
             </p>
@@ -194,7 +194,7 @@ export function ElectionActionPanel({
               type="button"
               onClick={handleWaitlist}
               disabled={waitlistLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal bg-white py-3.5 text-sm font-semibold text-teal transition hover:bg-teal/5 disabled:opacity-50"
+              className="btn-ghost w-full gap-2 border-teal/40 py-3.5 text-teal disabled:opacity-50"
             >
               {waitlistLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               Join Waitlist
@@ -215,9 +215,9 @@ export function ElectionActionPanel({
                 {election.max_voters.toLocaleString()}
               </span>
             </div>
-            <div className="h-2.5 overflow-hidden rounded-full bg-paper">
+            <div className="h-2.5 overflow-hidden rounded-full bg-paper2">
               <div
-                className="h-full rounded-full bg-teal transition-all"
+                className="h-full rounded-full bg-gradient-to-r from-teal to-teal-light transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -230,7 +230,7 @@ export function ElectionActionPanel({
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="w-full rounded-xl bg-teal py-4 text-base font-semibold text-paper shadow-lg shadow-teal/20 transition hover:bg-teal-light"
+            className="btn-primary w-full py-4 text-base"
           >
             I Want to Participate
           </button>
@@ -247,8 +247,18 @@ export function ElectionActionPanel({
 
   return (
     <>
-      <aside className="sticky top-24 rounded-2xl border border-border bg-white p-6 shadow-card">
-        <h2 className="font-heading text-lg font-bold text-ink">Participate</h2>
+      <aside className="glass-card sticky top-24 rounded-[1.5rem] p-6">
+        <h2 className="font-heading text-xl font-black text-ink">Participate</h2>
+        <div className="mt-4 flex -space-x-2">
+          {[0, 1, 2, 3].map((index) => (
+            <div
+              key={index}
+              className="grid h-8 w-8 place-items-center rounded-full border-2 border-white bg-gradient-to-br from-teal/20 to-gold/30 text-[10px] font-bold text-teal"
+            >
+              {index + 1}
+            </div>
+          ))}
+        </div>
         <div className="mt-6">{renderContent()}</div>
       </aside>
 

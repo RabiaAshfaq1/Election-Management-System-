@@ -3,22 +3,75 @@
 @tailwind utilities;
 
 :root {
-  --ink: #0a0a0f;
+  --ink: #07070d;
   --paper: #f5f3ee;
-  --teal: #1a6b6b;
-  --teal-light: #2a9d8f;
-  --gold: #c9a84c;
+  --paper2: #eceae3;
+  --teal: #0c6b5d;
+  --teal-light: #1aab94;
+  --teal2: #1aab94;
+  --teal3: #5de8d0;
+  --gold: #b8903a;
+  --gold2: #e8c96e;
   --accent: #e63946;
-  --muted: #6b6b7a;
-  --border: rgba(10, 10, 15, 0.08);
+  --muted: #6a6876;
+  --border: rgba(7, 7, 13, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --shadow-soft: 0 4px 24px rgba(7, 7, 13, 0.06);
+  --shadow-card: 0 8px 40px rgba(7, 7, 13, 0.1);
+  --shadow-hover: 0 20px 60px rgba(7, 7, 13, 0.15);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--paper);
   color: var(--ink);
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-geist), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  animation: page-fade 0.3s ease-out both;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 0.02;
+  background-image:
+    radial-gradient(circle at 20% 20%, #07070d 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 0%, #0c6b5d 0 1px, transparent 1px);
+  background-size: 18px 18px, 26px 26px;
+  mix-blend-mode: multiply;
+}
+
+::selection {
+  background: rgba(26, 171, 148, 0.25);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--teal) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--teal), var(--teal2));
+  border-radius: 999px;
 }
 
 /* Hero decorative rings */
@@ -27,7 +80,7 @@ body {
   content: "";
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(26, 107, 107, 0.15);
+  border: 1px solid rgba(12, 107, 93, 0.15);
 }
 
 .hero-rings::before {
@@ -38,7 +91,16 @@ body {
 .hero-rings::after {
   inset: 28%;
   animation: ring-pulse 8s ease-in-out infinite 1.5s;
-  border-color: rgba(201, 168, 76, 0.2);
+  border-color: rgba(184, 144, 58, 0.2);
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes ring-pulse {
@@ -72,12 +134,125 @@ body {
   }
 }
 
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(180%) skewX(-18deg);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-teal px-5 py-2.5 text-sm font-semibold text-paper transition hover:bg-teal-light active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+    @apply relative inline-flex min-h-11 items-center justify-center overflow-hidden rounded-xl bg-teal px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition duration-150 hover:bg-teal-light active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary::after {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 bg-white/25 opacity-0 transition-opacity;
+    animation: shimmer-sweep 1.1s ease-out;
+    animation-play-state: paused;
+  }
+
+  .btn-primary:hover::after {
+    opacity: 1;
+    animation-play-state: running;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-paper active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-white/70 px-5 py-2.5 text-sm font-semibold text-ink shadow-soft backdrop-blur-xl transition duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-white/45 px-5 py-2.5 text-sm font-semibold text-ink backdrop-blur-xl transition duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary:hover,
+  .btn-ghost:hover {
+    background-color: rgba(12, 107, 93, 0.05);
+    border-color: rgba(12, 107, 93, 0.4);
+  }
+
+  .glass-card {
+    @apply border border-white/80 bg-white/65 shadow-card backdrop-blur-2xl;
+  }
+
+  .premium-card {
+    @apply relative overflow-hidden rounded-[1.25rem] border border-white/90 bg-white/70 shadow-card backdrop-blur-2xl transition-all duration-300;
+  }
+
+  .premium-card:hover {
+    @apply -translate-y-1 shadow-hover;
+    border-color: rgba(12, 107, 93, 0.2);
+  }
+
+  .status-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted backdrop-blur-xl;
+  }
+
+  .fade-up {
+    animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .shake {
+    animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+
+  .skeleton-shimmer {
+    @apply relative overflow-hidden bg-paper2;
+  }
+
+  .skeleton-shimmer::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent;
+    animation: skeleton-shimmer 1.3s infinite;
+  }
+
+  .display-heading {
+    @apply font-heading font-black tracking-[-0.04em] text-ink;
   }
 }

@@ -59,7 +59,7 @@ export function ElectionsTable({ elections }: ElectionsTableProps) {
             placeholder="Search title or creator..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-border bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-teal focus:ring-2 focus:ring-teal/20"
+            className="min-h-11 w-full rounded-xl border border-border bg-white/70 py-2.5 pl-10 pr-4 text-sm outline-none backdrop-blur-xl focus:border-teal focus:ring-2 focus:ring-teal/20"
           />
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -68,7 +68,7 @@ export function ElectionsTable({ elections }: ElectionsTableProps) {
             onChange={(e) =>
               setStatusFilter(e.target.value as (typeof STATUS_OPTIONS)[number])
             }
-            className="rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-teal"
+            className="min-h-11 rounded-xl border border-border bg-white/70 px-3 py-2.5 text-sm outline-none backdrop-blur-xl focus:border-teal"
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
@@ -91,21 +91,21 @@ export function ElectionsTable({ elections }: ElectionsTableProps) {
           description="Try adjusting your search or filters."
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-card">
+        <div className="glass-card overflow-hidden rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead>
-                <tr className="border-b border-border bg-paper/60">
-                  <th className="px-5 py-3.5 font-semibold text-ink">Title</th>
-                  <th className="px-5 py-3.5 font-semibold text-ink">Creator</th>
-                  <th className="px-5 py-3.5 font-semibold text-ink">Status</th>
-                  <th className="px-5 py-3.5 font-semibold text-ink">Voters</th>
-                  <th className="px-5 py-3.5 font-semibold text-ink">Start</th>
+                <tr className="border-b border-border bg-paper2">
+                  <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted">Title</th>
+                  <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted">Creator</th>
+                  <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted">Status</th>
+                  <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted">Voters</th>
+                  <th className="px-5 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-muted">Start</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {filtered.map((e) => (
-                  <tr key={e.id} className="hover:bg-paper/40">
+                  <tr key={e.id} className="transition hover:bg-teal/5">
                     <td className="px-5 py-4 font-medium text-ink">{e.title}</td>
                     <td className="px-5 py-4 text-muted">{e.creator_name}</td>
                     <td className="px-5 py-4">

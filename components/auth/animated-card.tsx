@@ -17,7 +17,7 @@ export function AnimatedCard({ children, className }: AnimatedCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "w-full rounded-2xl border border-border bg-white p-8 shadow-card sm:p-10",
+        "glass-card w-full rounded-[1.5rem] p-8 sm:p-10",
         className
       )}
     >

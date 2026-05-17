@@ -101,13 +101,13 @@ export function VoteExperience({
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-ink">
+    <div className="relative min-h-screen overflow-hidden bg-paper">
       <div
         className="pointer-events-none absolute inset-0 opacity-40"
         aria-hidden
         style={{
           backgroundImage:
-            "radial-gradient(circle at 30% 20%, rgba(26,107,107,0.35) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(201,168,76,0.15) 0%, transparent 45%)",
+            "radial-gradient(circle at 20% 12%, rgba(93,232,208,0.28) 0%, transparent 40%), radial-gradient(circle at 80% 75%, rgba(232,201,110,0.22) 0%, transparent 42%)",
         }}
       />
 
@@ -125,16 +125,16 @@ export function VoteExperience({
               <motion.div
                 animate={shake ? { x: [0, -12, 12, -10, 10, -6, 6, 0] } : { x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="rounded-3xl border border-paper/10 bg-paper p-10 shadow-2xl shadow-black/40"
+                className="glass-card rounded-3xl p-10"
               >
-                <p className="text-center font-heading text-3xl font-bold text-ink">
+                <p className="text-center font-heading text-3xl font-black text-ink">
                   Vote<span className="italic text-teal">Flow</span>
                 </p>
                 <p className="mt-2 text-center text-sm text-muted">
                   {electionTitle}
                 </p>
 
-                <h1 className="mt-10 text-center font-heading text-3xl font-bold text-ink">
+                <h1 className="mt-10 text-center font-heading text-4xl font-black text-ink">
                   Verify Your Identity
                 </h1>
 
@@ -153,7 +153,10 @@ export function VoteExperience({
                     placeholder="POLL-XXXX-0000"
                     autoComplete="off"
                     spellCheck={false}
-                    className="w-full rounded-xl border-2 border-border bg-white px-4 py-5 text-center font-mono text-2xl font-semibold tracking-wider text-ink outline-none transition focus:border-teal focus:ring-4 focus:ring-teal/20"
+                    className={cn(
+                      "w-full rounded-xl border-2 border-border bg-white/80 px-4 py-5 text-center font-mono text-2xl font-semibold uppercase tracking-[0.25em] text-ink outline-none transition focus:border-teal focus:ring-4 focus:ring-teal/20",
+                      shake && "shake border-accent"
+                    )}
                   />
                   <p className="mt-4 text-center text-sm text-muted">
                     Your ID was emailed to you when the election was finalized
@@ -168,7 +171,7 @@ export function VoteExperience({
                   <button
                     type="submit"
                     disabled={verifying || !secretId.trim()}
-                    className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-teal py-4 text-base font-semibold text-paper transition hover:bg-teal-light disabled:opacity-50"
+                    className="btn-primary mt-8 w-full gap-2 py-4 text-base"
                   >
                     {verifying && <Loader2 className="h-5 w-5 animate-spin" />}
                     Verify
@@ -188,19 +191,19 @@ export function VoteExperience({
               className="w-full"
             >
               <div className="mb-10 text-center">
-                <p className="text-sm font-semibold uppercase tracking-widest text-teal-light">
+                <p className="text-sm font-semibold uppercase tracking-widest text-teal">
                   Official ballot
                 </p>
-                <h1 className="mt-3 font-heading text-4xl font-bold text-paper lg:text-5xl">
+                <h1 className="display-heading mt-3 text-4xl lg:text-5xl">
                   Cast Your Vote — Choose One Candidate
                 </h1>
-                <p className="mt-4 text-sm text-paper/50">
+                <p className="mt-4 text-sm text-muted">
                   Your vote is anonymous. You cannot change it after submission.
                 </p>
               </div>
 
               {candidates.length === 0 ? (
-                <p className="rounded-2xl border border-paper/10 bg-paper/5 p-8 text-center text-paper/70">
+                <p className="glass-card rounded-2xl p-8 text-center text-muted">
                   No candidates are on the ballot yet. Please check back later.
                 </p>
               ) : (
@@ -213,17 +216,17 @@ export function VoteExperience({
                       type="button"
                       onClick={() => setSelectedId(candidate.id)}
                       className={cn(
-                        "relative overflow-hidden rounded-2xl border-2 bg-paper p-6 text-left transition duration-300",
+                        "premium-card relative overflow-hidden rounded-2xl border-2 p-6 text-left transition duration-300",
                         selected
-                          ? "scale-[1.02] border-teal shadow-lg shadow-teal/20"
-                          : "border-transparent hover:scale-[1.01] hover:border-paper/30"
+                          ? "scale-[1.02] border-teal shadow-hover ring-4 ring-teal/10"
+                          : "border-transparent hover:scale-[1.01] hover:border-teal/20"
                       )}
                     >
                       {selected && (
                         <motion.span
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-teal text-paper"
+                          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-teal text-white"
                         >
                           <Check className="h-5 w-5" strokeWidth={3} />
                         </motion.span>
@@ -233,7 +236,7 @@ export function VoteExperience({
                         photoUrl={candidate.photo_url}
                         size={64}
                       />
-                      <h3 className="mt-4 font-heading text-xl font-bold text-ink">
+                      <h3 className="mt-4 font-heading text-xl font-black text-ink">
                         {candidate.name}
                       </h3>
                       {candidate.designation && (
@@ -257,7 +260,7 @@ export function VoteExperience({
                   type="button"
                   disabled={!selectedId || candidates.length === 0}
                   onClick={() => setConfirmOpen(true)}
-                  className="rounded-xl bg-teal px-12 py-4 text-base font-semibold text-paper shadow-lg shadow-teal/30 transition hover:bg-teal-light disabled:opacity-40"
+                  className="btn-primary px-12 py-4 text-base disabled:opacity-40"
                 >
                   Submit Vote
                 </button>
@@ -271,8 +274,20 @@ export function VoteExperience({
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="flex w-full max-w-lg flex-col items-center text-center"
+              className="glass-card flex w-full max-w-lg flex-col items-center rounded-3xl p-10 text-center"
             >
+              <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
+                {[...Array(16)].map((_, index) => (
+                  <span
+                    key={index}
+                    className="absolute h-2 w-2 rounded-full bg-teal/40"
+                    style={{
+                      left: `${10 + ((index * 17) % 80)}%`,
+                      top: `${8 + ((index * 23) % 70)}%`,
+                    }}
+                  />
+                ))}
+              </div>
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -282,19 +297,19 @@ export function VoteExperience({
                   damping: 14,
                   delay: 0.1,
                 }}
-                className="flex h-24 w-24 items-center justify-center rounded-full bg-teal"
+                className="relative flex h-24 w-24 items-center justify-center rounded-full bg-teal shadow-hover"
               >
-                <Check className="h-12 w-12 text-paper" strokeWidth={2.5} />
+                <Check className="h-12 w-12 text-white" strokeWidth={2.5} />
               </motion.div>
-              <h1 className="mt-10 font-heading text-4xl font-bold text-paper">
+              <h1 className="mt-10 font-heading text-4xl font-black text-ink">
                 Your vote has been cast
               </h1>
-              <p className="mt-4 text-lg text-paper/70">
+              <p className="mt-4 text-lg text-muted">
                 Thank you for participating in {electionTitle}.
               </p>
               <Link
                 href={`/elections/${electionId}/results`}
-                className="mt-10 rounded-xl bg-paper px-10 py-4 text-base font-semibold text-teal transition hover:bg-white"
+                className="btn-primary mt-10 px-10 py-4 text-base"
               >
                 View Live Results
               </Link>
@@ -307,16 +322,16 @@ export function VoteExperience({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <button
             type="button"
-            className="absolute inset-0 bg-ink/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
             onClick={() => !submitting && setConfirmOpen(false)}
             aria-label="Close"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md rounded-2xl bg-paper p-8 shadow-2xl"
+            className="glass-card relative w-full max-w-md rounded-2xl p-8"
           >
-            <h2 className="font-heading text-2xl font-bold text-ink">
+            <h2 className="font-heading text-2xl font-black text-ink">
               Confirm your vote
             </h2>
             <p className="mt-4 text-muted">
@@ -329,7 +344,7 @@ export function VoteExperience({
                 type="button"
                 disabled={submitting}
                 onClick={() => setConfirmOpen(false)}
-                className="flex-1 rounded-xl border border-border py-3 text-sm font-semibold text-ink transition hover:bg-paper disabled:opacity-50"
+                className="btn-ghost flex-1 py-3 disabled:opacity-50"
               >
                 Go back
               </button>
@@ -337,7 +352,7 @@ export function VoteExperience({
                 type="button"
                 disabled={submitting}
                 onClick={handleSubmitVote}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-teal py-3 text-sm font-semibold text-paper transition hover:bg-teal-light disabled:opacity-50"
+                className="btn-primary flex-1 gap-2 py-3 disabled:opacity-50"
               >
                 {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
                 Confirm vote

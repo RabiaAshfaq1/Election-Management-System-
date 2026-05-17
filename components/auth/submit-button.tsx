@@ -22,7 +22,7 @@ export function SubmitButton({
       type={type}
       disabled={disabled ?? loading}
       className={cn(
-        "flex w-full items-center justify-center gap-2 rounded-xl bg-teal px-4 py-3 text-sm font-semibold text-paper transition hover:bg-teal-light disabled:cursor-not-allowed disabled:opacity-60",
+        "btn-primary w-full gap-2 px-4 py-3",
         className
       )}
       {...props}

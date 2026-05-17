@@ -1,9 +1,8 @@
 // SERVER ONLY — never import in client components
 
 import { createAdminClient } from "@/lib/supabase-admin";
+import { CANDIDATE_PHOTOS_BUCKET } from "@/lib/storage";
 import { ALLOWED_IMAGE_TYPES } from "@/lib/validations/candidate";
-
-const BUCKET = "candidate-photos";
 
 export async function uploadCandidatePhoto(
   electionId: string,
@@ -23,10 +22,12 @@ export async function uploadCandidatePhoto(
 
   const admin = createAdminClient();
 
-  const { error } = await admin.storage.from(BUCKET).upload(path, buffer, {
-    contentType: file.type,
-    upsert: false,
-  });
+  const { error } = await admin.storage
+    .from(CANDIDATE_PHOTOS_BUCKET)
+    .upload(path, buffer, {
+      contentType: file.type,
+      upsert: false,
+    });
 
   if (error) {
     throw new Error(error.message);
@@ -34,7 +35,7 @@ export async function uploadCandidatePhoto(
 
   const {
     data: { publicUrl },
-  } = admin.storage.from(BUCKET).getPublicUrl(path);
+  } = admin.storage.from(CANDIDATE_PHOTOS_BUCKET).getPublicUrl(path);
 
   return publicUrl;
 }
@@ -44,7 +45,7 @@ export async function deleteCandidatePhoto(photoUrl: string | null) {
 
   try {
     const url = new URL(photoUrl);
-    const marker = `/storage/v1/object/public/${BUCKET}/`;
+    const marker = `/storage/v1/object/public/${CANDIDATE_PHOTOS_BUCKET}/`;
     const index = url.pathname.indexOf(marker);
     if (index === -1) return;
 
@@ -52,7 +53,7 @@ export async function deleteCandidatePhoto(photoUrl: string | null) {
       url.pathname.slice(index + marker.length)
     );
     const admin = createAdminClient();
-    await admin.storage.from(BUCKET).remove([path]);
+    await admin.storage.from(CANDIDATE_PHOTOS_BUCKET).remove([path]);
   } catch {
     // ignore cleanup failures
   }

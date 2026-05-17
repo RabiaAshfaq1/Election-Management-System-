@@ -4,7 +4,7 @@ function Bone({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-lg bg-border/60",
+        "skeleton-shimmer rounded-lg",
         className
       )}
     />
@@ -17,7 +17,7 @@ export function StatsSkeleton({ count = 4 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-border bg-white p-6 shadow-card"
+          className="glass-card rounded-2xl p-6"
         >
           <Bone className="h-11 w-11 rounded-xl" />
           <Bone className="mt-4 h-10 w-24" />
@@ -30,7 +30,7 @@ export function StatsSkeleton({ count = 4 }: { count?: number }) {
 
 export function TableSkeleton({ rows = 6 }: { rows?: number }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-card">
+    <div className="glass-card overflow-hidden rounded-2xl">
       <div className="border-b border-border p-4">
         <Bone className="h-10 w-full max-w-md" />
       </div>
@@ -54,7 +54,7 @@ export function CardsSkeleton({ count = 3 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-border bg-white p-6 shadow-card"
+          className="glass-card rounded-2xl p-6"
         >
           <Bone className="h-6 w-3/4" />
           <Bone className="mt-3 h-4 w-full" />

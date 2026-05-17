@@ -22,16 +22,17 @@ export function DashboardShell({ sidebar, children }: DashboardShellProps) {
 
   return (
     <div className="min-h-screen bg-paper">
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-white px-4 py-3 lg:hidden">
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(93,232,208,0.16),transparent_28%),radial-gradient(circle_at_95%_12%,rgba(232,201,110,0.12),transparent_32%)]" />
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-paper/80 px-4 py-3 backdrop-blur-[20px] lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="rounded-xl p-2 text-ink hover:bg-paper"
+          className="min-h-11 rounded-xl border border-border bg-white/60 p-2 text-ink shadow-soft hover:bg-teal/5"
           aria-label="Open menu"
         >
           <Menu className="h-6 w-6" />
         </button>
-        <span className="font-heading text-lg font-bold text-ink">
+        <span className="font-heading text-lg font-black text-ink">
           Vote<span className="text-teal">Flow</span>
         </span>
         <div className="w-10" />
@@ -48,14 +49,14 @@ export function DashboardShell({ sidebar, children }: DashboardShellProps) {
 
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-border bg-white transition-transform duration-300 lg:translate-x-0",
+          "fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-border bg-white/85 shadow-soft backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <button
           type="button"
           onClick={() => setMobileOpen(false)}
-          className="absolute right-3 top-5 rounded-lg p-1.5 text-muted hover:bg-paper lg:hidden"
+          className="absolute right-3 top-5 rounded-lg p-1.5 text-muted hover:bg-teal/5 lg:hidden"
           aria-label="Close sidebar"
         >
           <X className="h-5 w-5" />
@@ -63,7 +64,7 @@ export function DashboardShell({ sidebar, children }: DashboardShellProps) {
         <div className="flex h-full flex-col">{sidebar}</div>
       </aside>
 
-      <main className="min-h-screen p-4 sm:p-6 lg:ml-64 lg:p-8 xl:p-10">
+      <main className="relative min-h-screen pb-24 p-4 sm:p-6 lg:ml-64 lg:p-8 xl:p-10">
         {children}
       </main>
     </div>

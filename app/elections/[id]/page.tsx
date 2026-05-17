@@ -55,8 +55,8 @@ export default async function ElectionDetailPage({
           <div className="grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-12">
             <div className="space-y-10">
               {election.description && (
-                <section>
-                  <h2 className="font-heading text-2xl font-bold text-ink">
+                <section className="glass-card rounded-[1.5rem] p-6">
+                  <h2 className="font-heading text-2xl font-black text-ink">
                     About
                   </h2>
                   <p className="mt-4 whitespace-pre-wrap leading-relaxed text-muted">

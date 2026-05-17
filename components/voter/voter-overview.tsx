@@ -29,12 +29,12 @@ export function VoterOverview({ elections, stats }: VoterOverviewProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
-            className="rounded-2xl border border-border bg-white px-5 py-4 shadow-card"
+            className="premium-card px-5 py-4"
           >
             <p className="text-xs font-medium uppercase tracking-wider text-muted">
               {s.label}
             </p>
-            <p className="mt-1 font-heading text-3xl font-bold text-ink">
+            <p className="mt-1 font-heading text-3xl font-black text-ink">
               {s.value}
             </p>
           </motion.div>
@@ -43,7 +43,7 @@ export function VoterOverview({ elections, stats }: VoterOverviewProps) {
 
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-heading text-xl font-bold text-ink">
+          <h2 className="font-heading text-xl font-black text-ink">
             Voting status
           </h2>
           <Link
@@ -55,9 +55,14 @@ export function VoterOverview({ elections, stats }: VoterOverviewProps) {
         </div>
 
         {preview.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border bg-white px-6 py-10 text-center text-sm text-muted">
-            Register for an election to see your status here.
-          </p>
+          <div className="glass-card rounded-2xl border-dashed px-6 py-10 text-center">
+            <div className="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-2xl bg-teal/10 text-2xl">
+              ◌
+            </div>
+            <p className="text-sm text-muted">
+              Register for an election to see your status here.
+            </p>
+          </div>
         ) : (
           <ul className="space-y-2">
             {preview.map((row) => {
@@ -78,7 +83,7 @@ export function VoterOverview({ elections, stats }: VoterOverviewProps) {
               return (
                 <li
                   key={row.id}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-white px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-white/70 px-4 py-3 shadow-soft transition hover:bg-teal/5"
                 >
                   <div>
                     <p className="font-medium text-ink">{row.title}</p>

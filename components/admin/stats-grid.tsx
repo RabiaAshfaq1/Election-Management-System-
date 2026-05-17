@@ -65,7 +65,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
             delay: index * 0.08,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="rounded-2xl border border-border bg-white p-6 shadow-card"
+          className="premium-card p-6"
         >
           <div className="flex items-start justify-between">
             <div
@@ -74,10 +74,11 @@ export function StatsGrid({ stats }: StatsGridProps) {
               <item.icon className="h-5 w-5" strokeWidth={2} />
             </div>
           </div>
-          <p className="mt-4 font-heading text-4xl font-bold text-ink">
+          <p className="mt-4 font-heading text-4xl font-black text-ink">
             {item.value.toLocaleString()}
           </p>
           <p className="mt-1 text-sm text-muted">{item.label}</p>
+          <div className="absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-teal via-gold to-transparent" />
         </motion.div>
       ))}
     </div>

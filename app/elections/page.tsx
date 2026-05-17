@@ -21,12 +21,13 @@ export default async function ElectionsPage() {
     <>
       <LandingNavbar />
       <main className="min-h-screen bg-paper pt-16">
-        <div className="border-b border-border bg-white">
+        <div className="relative overflow-hidden border-b border-border">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(93,232,208,0.2),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(232,201,110,0.16),transparent_32%)]" />
           <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
-            <p className="text-sm font-semibold uppercase tracking-wider text-teal">
+            <p className="status-pill border-teal/20 bg-teal/10 text-teal">
               Elections
             </p>
-            <h1 className="mt-3 font-heading text-4xl font-bold text-ink lg:text-5xl">
+            <h1 className="display-heading mt-5 text-4xl lg:text-6xl">
               Find your next election
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted">
@@ -35,7 +36,7 @@ export default async function ElectionsPage() {
             </p>
             <Link
               href="/auth/signup"
-              className="mt-8 inline-block rounded-xl bg-teal px-6 py-3 text-sm font-semibold text-paper transition hover:bg-teal-light"
+              className="btn-primary mt-8 px-6 py-3"
             >
               Create an account
             </Link>

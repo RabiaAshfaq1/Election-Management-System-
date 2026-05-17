@@ -32,11 +32,14 @@ export function SidebarNav({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-border px-6 py-6">
-        <Link href={homeHref} className="block">
-          <span className="font-heading text-xl font-bold text-ink">
+        <Link href={homeHref} className="group block">
+          <span className="inline-flex items-center gap-3 font-heading text-xl font-black tracking-[-0.04em] text-ink">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-teal text-sm text-white shadow-soft transition group-hover:rotate-3">
+              V
+            </span>
             Vote<span className="text-teal">Flow</span>
           </span>
-          <span className="mt-1 block text-xs font-medium uppercase tracking-wider text-muted">
+          <span className="mt-3 block text-xs font-medium uppercase tracking-wider text-muted">
             {subtitle}
           </span>
         </Link>
@@ -53,10 +56,10 @@ export function SidebarNav({
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
+                "relative flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
                 isActive
-                  ? "bg-teal/10 text-teal"
-                  : "text-muted hover:bg-paper hover:text-ink"
+                  ? "border-l-[3px] border-teal bg-teal/10 text-teal"
+                  : "border-l-[3px] border-transparent text-muted hover:bg-teal/5 hover:text-ink"
               )}
             >
               <item.icon
@@ -70,10 +73,10 @@ export function SidebarNav({
       </nav>
 
       {footer ? (
-        <div className="border-t border-border px-4 py-4">{footer}</div>
+        <div className="border-t border-border bg-white/40 px-4 py-4">{footer}</div>
       ) : null}
 
-      <div className="mt-auto border-t border-border px-3 py-4">
+      <div className="mt-auto border-t border-border bg-white/40 px-3 py-4">
         <SignOutButton />
       </div>
     </div>

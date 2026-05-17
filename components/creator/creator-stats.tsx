@@ -43,17 +43,18 @@ export function CreatorStats({
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.08, duration: 0.4 }}
-          className="rounded-2xl border border-border bg-white p-6 shadow-card"
+          className="premium-card p-6"
         >
           <div
             className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${item.accent}`}
           >
             <item.icon className="h-5 w-5" strokeWidth={2} />
           </div>
-          <p className="font-heading text-3xl font-bold text-ink">
+          <p className="font-heading text-3xl font-black text-ink">
             {item.value.toLocaleString()}
           </p>
           <p className="mt-1 text-sm text-muted">{item.label}</p>
+          <div className="absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-teal via-gold to-transparent" />
         </motion.div>
       ))}
     </div>
