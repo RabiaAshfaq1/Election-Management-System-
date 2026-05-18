@@ -3,6 +3,8 @@ import { getClientIp } from "@/lib/rate-limit";
 interface TurnstileVerifyResponse {
   success: boolean;
   "error-codes"?: string[];
+  hostname?: string;
+  action?: string;
 }
 
 /**
@@ -38,19 +40,34 @@ export async function verifyTurnstileToken(
     }
   }
 
-  const res = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    }
-  );
+  let res: Response;
+  try {
+    res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      }
+    );
+  } catch (error) {
+    console.error("[turnstile] siteverify request failed", error);
+    return false;
+  }
 
   if (!res.ok) {
+    console.error("[turnstile] siteverify returned HTTP", res.status);
     return false;
   }
 
   const data = (await res.json()) as TurnstileVerifyResponse;
+  if (!data.success) {
+    console.error("[turnstile] verification failed", {
+      errorCodes: data["error-codes"] ?? [],
+      hostname: data.hostname,
+      action: data.action,
+    });
+  }
+
   return data.success === true;
 }
