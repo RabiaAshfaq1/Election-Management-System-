@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ecf8e)](https://supabase.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8)](https://tailwindcss.com/)
 
-**Live demo:** `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/`
+**Live demo:** `https://voteflow-rho.vercel.app/`
 
 **Repository:** `https://github.com/your-username/voteflow` _(update with your repo URL)_
 
@@ -36,7 +36,7 @@ VoteFlow is a full-stack election platform for universities, organizations, and 
 
 - **Sign up** → `/auth/signup` → confirm email (inbox link) → **Sign in** → `/auth/login`
 - After login you are redirected to the dashboard for your role.
-- Supabase **Site URL** + redirect: `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/auth/callback`.
+- Supabase **Site URL** + redirect: `https://voteflow-rho.vercel.app/auth/callback`.
 
 ### Super Admin flow
 
@@ -103,7 +103,7 @@ To vote in **someone else’s** election: `/elections` → register → vote whe
 
 ### Local dev quick checklist
 
-- [ ] Live app opens at `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/`
+- [ ] Live app opens at `https://voteflow-rho.vercel.app/`
 - [ ] `.env.local` filled (Supabase URL + publishable/secret keys)
 - [ ] All 5 SQL files run in Supabase (see below)
 - [ ] Email verification enabled; test signup/login
@@ -197,7 +197,7 @@ Required variables:
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (**server only**) |
 | `RESEND_API_KEY` | Resend API key |
 | `RESEND_FROM_EMAIL` | Verified sender address |
-| `NEXT_PUBLIC_APP_URL` | `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | `https://voteflow-rho.vercel.app` |
 | `CRON_SECRET` | Random string for cron auth |
 | `EMAIL_API_SECRET` | Random string for internal email API |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key |
@@ -229,7 +229,7 @@ WHERE email = 'your@email.com';
 npm run dev
 ```
 
-Open [https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/](https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/).
+Open [https://voteflow-rho.vercel.app/](https://voteflow-rho.vercel.app/).
 
 ---
 
@@ -269,7 +269,7 @@ npm run build
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://vuwdwfrfnhhyvkzwteti.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase **Publishable** key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase **Secret** key (server only) |
-| `NEXT_PUBLIC_APP_URL` | `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | `https://voteflow-rho.vercel.app` |
 | `RESEND_API_KEY` | From [resend.com](https://resend.com) |
 | `RESEND_FROM_EMAIL` | Verified sender, e.g. `VoteFlow <onboarding@resend.dev>` |
 | `CRON_SECRET` | Random string, e.g. `openssl rand -hex 32` |
@@ -278,7 +278,7 @@ npm run build
 | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret |
 
 4. Click **Deploy** and wait for the build to finish.
-5. Live URL: `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/`.
+5. Live URL: `https://voteflow-rho.vercel.app/`.
 6. Vercel → **Settings → Environment Variables** → set `NEXT_PUBLIC_APP_URL` to that URL → **Redeploy** (Deployments → ⋮ → Redeploy).
 
 > **Never** commit `.env.local` — it stays on your machine only.
@@ -287,8 +287,8 @@ npm run build
 
 [Supabase → Authentication → URL configuration](https://supabase.com/dashboard/project/vuwdwfrfnhhyvkzwteti/auth/url-configuration):
 
-- **Site URL:** `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app`
-- **Redirect URLs:** `https://voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app/auth/callback`
+- **Site URL:** `https://voteflow-rho.vercel.app`
+- **Redirect URLs:** `https://voteflow-rho.vercel.app/auth/callback`
 
 Make yourself admin (SQL Editor):
 
@@ -302,7 +302,7 @@ WHERE email = 'your@email.com';
 
 In [Turnstile dashboard](https://dash.cloudflare.com/), edit your widget → add hostname:
 
-- `voteflow-3q4efk5t5-rabiaashfaq1s-projects.vercel.app`
+- `voteflow-rho.vercel.app`
 - `*.vercel.app` (optional, for preview deploys)
 
 Without this, signup/login return **CAPTCHA verification failed** in production.
